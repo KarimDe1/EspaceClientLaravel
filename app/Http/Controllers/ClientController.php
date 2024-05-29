@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\File;
 use App\Models\Client;
 
 class ClientController extends Controller
@@ -168,9 +168,31 @@ class ClientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-    }
+        $client = Client::findOrFail($id); // Find the client by ID
+        
+        // Update the client's information
+        $data = $request->except('picture'); // Exclude picture from the data
+        
+        if ($request->hasFile('picture')) {
+            $path = $client->picture;
+            if (File::exists($path)) {
 
+                File::delete($path);
+            }
+            $file = $request->file('picture');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $file->move('img/client/', $filename);
+            $client->picture = 'img/client/' . $filename;
+        }
+
+        
+        $client->update($data);
+        
+        return response()->json(['message' => 'Mise à jour du profil réussie'], 200);
+    }
+    
+    
     /**
      * Remove the specified resource from storage.
      *
@@ -181,4 +203,23 @@ class ClientController extends Controller
     {
         //
     }
+
+      //Pour obtenir l'utilisateur actuellement connecté
+      public function getCurrentUser()
+      {
+          $id = auth()->user()->_id;
+          $currentuser = Client::find($id);
+          if ($currentuser) {
+              return response()->json([
+                  'status' => 200,
+                  'currentuser' => $currentuser
+              ]);
+          } else {
+              return response()->json([
+                  'status' => 404,
+                  'message' => 'Aucun utilisateur trouvé'
+              ]);
+          }
+      }
+  
 }

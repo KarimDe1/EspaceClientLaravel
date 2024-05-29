@@ -41,6 +41,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
     Route::get('/factures/{clientId}', [FactureController::class, 'monf']);
     Route::post('/logout', [ClientController::class, 'logout']);
+    Route::post('/update_profile/{id}', [ClientController::class, 'update']);
+    Route::get('/currentuser', [ClientController::class, 'getCurrentUser']);
+
 });
 
 
