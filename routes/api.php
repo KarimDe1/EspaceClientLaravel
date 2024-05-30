@@ -6,6 +6,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\FactureController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StripePaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [ClientController::class, 'logout']);
     Route::post('/update_profile/{id}', [ClientController::class, 'update']);
     Route::get('/currentuser', [ClientController::class, 'getCurrentUser']);
+    Route::post('/create-payment-intent', [StripePaymentController::class, 'createPaymentIntent']);
+
 
 });
 
