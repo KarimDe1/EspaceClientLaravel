@@ -15,11 +15,13 @@ class CreateFacturesTable extends Migration
     {
         Schema::create('factures', function (Blueprint $table) {
             $table->id();
+            $table->string('numero_facture');
             $table->unsignedBigInteger('client_id');
             $table->string('montant_a_payer');
             $table->string('reste_a_payer');
             $table->string('prise_en_charge');
             $table->string('echeance');
+            $table->string('pdf_facture');
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('client')->onDelete('cascade');
