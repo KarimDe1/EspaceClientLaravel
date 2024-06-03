@@ -3,9 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model;
 
-class suggestions extends Model
+class Suggestion extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'Sugg_context',
+        'Subject',
+        'Message',
+        'Ticket',
+    ];
 }
