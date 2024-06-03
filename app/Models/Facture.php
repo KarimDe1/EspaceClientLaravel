@@ -11,6 +11,7 @@ class Facture extends Model
     protected $fillable = [
 
         'client_id',
+
         'numero_facture',
         'montant_a_payer',
         'reste_a_payer',
@@ -19,8 +20,5 @@ class Facture extends Model
         'pdf_facture'
     ];
 
-    public function client()
-    {
-        return $this->belongsTo(client::class);
-    }
+
 }

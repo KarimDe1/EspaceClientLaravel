@@ -15,7 +15,14 @@ class CreateContratsTable extends Migration
     {
         Schema::create('contrats', function (Blueprint $table) {
             $table->id();
+            $table->string('reference_contrat');
+            $table->unsignedBigInteger('client_id');
+            $table->string('designation');
+            $table->string('date_de_debut');
+            $table->string('etat');
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('client')->onDelete('cascade');
         });
     }
 

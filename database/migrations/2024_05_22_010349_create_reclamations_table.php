@@ -15,7 +15,16 @@ class CreateReclamationsTable extends Migration
     {
         Schema::create('reclamations', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('Offre');
+            $table->string('Service');
+            $table->string('Category');
+            $table->string('Motif_rec');
+            $table->string('Image');
+            $table->string('gsm');
+            $table->string('Message');
+            $table->string('Reference');
+            $table->unsignedBigInteger('gsm');
+            $table->foreign('gsm')->references('gsm')->on('clients')->onDelete('cascade');      
         });
     }
 

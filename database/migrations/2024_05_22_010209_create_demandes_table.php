@@ -15,7 +15,14 @@ class CreateDemandesTable extends Migration
     {
         Schema::create('demandes', function (Blueprint $table) {
             $table->id();
+            $table->string('Reference');
+            $table->string('Motif_demand');
+            $table->text('Message')->nullable();
             $table->timestamps();
+
+            $table->unsignedBigInteger('client_id');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+            
         });
     }
 

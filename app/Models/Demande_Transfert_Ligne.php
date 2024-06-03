@@ -26,13 +26,5 @@ class DemandeTransfertLigne extends Model
 
 
     
-    public function client()
-    {
-        return $this->belongsTo(Client::class);
-    }
-
-    public function produit()
-    {
-        return $this->hasOne(Contrat::class, 'reference', 'adsl_num');
-    }
+    
 }

@@ -18,15 +18,5 @@ class DemandeMigration extends Model
         'message',
         'client_id',
     ];
-
-    public function client()
-    {
-        return $this->belongsTo(Client::class);
-    }
-
-    public function produit()
-    {
-        return $this->hasOne(Produit::class, 'contract_prod', 'contract');
-    }
     
 }

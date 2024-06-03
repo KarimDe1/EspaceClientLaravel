@@ -19,8 +19,4 @@ class Demande extends Model
         'State'
     ];
 
-    public function client()
-    {
-        return $this->belongsTo(Client::class);
-    }
 }
