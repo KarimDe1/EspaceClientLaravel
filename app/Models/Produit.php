@@ -12,6 +12,8 @@ class Produit extends Model
 
         'reference_contrat',
 
+        'ref_produit_contrat',
+
         'reference',
         'nom_commercial',
         'etat',

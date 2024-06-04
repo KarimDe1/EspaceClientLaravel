@@ -16,7 +16,7 @@ class CreateProduitsTable extends Migration
         Schema::create('produits', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('reference_contrat');
-            $table->string('ref_produit_contrat');
+            $table->integer('ref_produit_contrat')->unique();
             $table->string('reference');
             $table->string('nom_commercial');
             $table->string('etat');

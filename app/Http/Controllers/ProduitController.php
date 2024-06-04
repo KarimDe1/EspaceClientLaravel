@@ -24,81 +24,74 @@ class ProduitController extends Controller
     }
 
     public function add($id)
-{
-    try {
-        $objectId = new ObjectId($id);
-    } catch (\Exception $e) {
-        return response()->json(['status' => 'error', 'message' => 'Invalid ID format'], 400);
-    }
-
-    $client = Client::where('_id', $objectId)->first();
-
-    if (!$client) {
-        return response()->json(['status' => 'error', 'message' => 'Client with ID ' . $id . ' not found'], 404);
-    }
-
-    $contrats = Contrat::where('client_id', $id)->get();
-
-    foreach ($contrats as $contrat) {
-        $existingProduit = Produit::where('nom_commercial', $contrat->designation .'( '.$client->tel.' )')->first();
-
-        if (!$existingProduit) {
-            $produit = new Produit([
-                'reference_contrat' => $contrat->id,
-                'reference' => $client->tel,
-                'nom_commercial' => $contrat->designation .'( '.$client->tel.' )',
-                'etat' => 'your_etat_value_here',
-                'etat_service' => 'your_etat_service_value_here',
-            ]);
-
-            $produit->save();
+    {
+        try {
+            $objectId = new ObjectId($id);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Invalid ID format'], 400);
         }
+
+        $client = Client::where('_id', $objectId)->first();
+
+        if (!$client) {
+            return response()->json(['status' => 'error', 'message' => 'Client with ID ' . $id . ' not found'], 404);
+        }
+
+        $contrats = Contrat::where('client_id', $id)->get();
+
+        foreach ($contrats as $contrat) {
+            $nom_commercial = $contrat->designation . ' ( ' . $client->tel . ' )';
+            $existingProduit = Produit::where('nom_commercial', $nom_commercial)->first();
+
+            if (!$existingProduit) {
+                // Generate a unique value for ref_produit_contrat
+                $maxRefProduitContrat = Produit::max('ref_produit_contrat');
+                $uniqueRefProduitContrat = $maxRefProduitContrat ? $maxRefProduitContrat + 1 : 1;
+
+                // Determine the value of 'etat'
+                $etat = $contrat->etat == '1' ? 'En cours' : 'your_default_etat_value';
+
+                $produit = new Produit([
+                    'reference_contrat' => $contrat->id,
+                    'ref_produit_contrat' => $uniqueRefProduitContrat,
+                    'reference' => $client->tel,
+                    'nom_commercial' => $nom_commercial,
+                    'etat' => $etat,
+                    'etat_service' => '',
+                ]);
+
+                $produit->save();
+            }
+        }
+
+        return response()->json([
+            'status' => 200,
+            'xd'=> 'mena ',
+            'message' => 'Produits created successfully',
+        ]);
     }
 
-    return response()->json([
-        'status' => 200,
-        'message' => 'Produits created successfully',
-    ]);
-}
 
 
-    
-
-
-
-
-
-    public function adds(Request $request) {
-        $fields = $request->validate([
-            'reference_contrat'=> 'required|string',
-            'ref_produit_contrat'=> 'required|string',
-            'reference'=> 'required|string',
-            'nom_commercial'=> 'required|string',
-            'etat'=> 'required|string',
-            'etat_service'=> 'required|string',
+    public function look()
+    {
+        $produit = Produit::all();
+        return response()->json([
+            'status' => 200,
+            'produit' => $produit
         ]);
-    
-        $produit = Produit::create([
-            'reference_contrat' => $fields['reference_contrat'],
-            'ref_produit_contrat' => $fields['ref_produit_contrat'],
-            'reference' => $fields['reference'],
-            'nom_commercial' => $fields['nom_commercial'],
-            'etat' => $fields['etat'],
-            'etat_service' => $fields['etat_service'],
-        ]);
-    
-        $response = [
-            'produit' => $produit,
-        ];
-    
-        return response($response, 201);
     }
 
+
+
+
+
+    
     public function monc($id)
     {
         $contract = Contrat::where('client_id', $id)->get();
         return response()->json([
-            'status' => 200,
+            'status' => 2002,
             'contract' => $contract
         ]);
     }
