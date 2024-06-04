@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use MongoDB\BSON\ObjectId;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use App\Models\Produit;
 use App\Models\Contrat;
+use App\Models\Client;
+
 
 class ProduitController extends Controller
 {
@@ -19,41 +23,52 @@ class ProduitController extends Controller
         //
     }
 
-    public function adds($id)
-    {
-        // Assuming Client model is imported at the top
-        $client = Client::where('client_id', $id)->first(); // Use first() instead of get() to get a single client
-        
-        if (!$client) {
-            return response()->json(['status' => 'error', 'message' => 'Client not found'], 404);
-        }
-        
-        $contrats = Contrat::where('client_id', $id)->get();
-        
-        foreach ($contrats as $contrat) {
+    public function add($id)
+{
+    try {
+        $objectId = new ObjectId($id);
+    } catch (\Exception $e) {
+        return response()->json(['status' => 'error', 'message' => 'Invalid ID format'], 400);
+    }
+
+    $client = Client::where('_id', $objectId)->first();
+
+    if (!$client) {
+        return response()->json(['status' => 'error', 'message' => 'Client with ID ' . $id . ' not found'], 404);
+    }
+
+    $contrats = Contrat::where('client_id', $id)->get();
+
+    foreach ($contrats as $contrat) {
+        $existingProduit = Produit::where('nom_commercial', $contrat->designation .'( '.$client->tel.' )')->first();
+
+        if (!$existingProduit) {
             $produit = new Produit([
                 'reference_contrat' => $contrat->id,
                 'reference' => $client->tel,
-                'nom_commercial' => 'your_nom_commercial_value_here',
+                'nom_commercial' => $contrat->designation .'( '.$client->tel.' )',
                 'etat' => 'your_etat_value_here',
                 'etat_service' => 'your_etat_service_value_here',
             ]);
-        
+
             $produit->save();
         }
-        
-        return response()->json([
-            'status' => 200,
-            'message' => 'Produits created successfully',
-        ]);
     }
+
+    return response()->json([
+        'status' => 200,
+        'message' => 'Produits created successfully',
+    ]);
+}
+
+
     
 
 
 
 
 
-    public function add(Request $request) {
+    public function adds(Request $request) {
         $fields = $request->validate([
             'reference_contrat'=> 'required|string',
             'ref_produit_contrat'=> 'required|string',

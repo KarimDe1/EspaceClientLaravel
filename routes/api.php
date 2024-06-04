@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ContractController;
@@ -44,7 +44,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
     Route::get('/factures/{clientId}', [FactureController::class, 'monf']);
-    Route::get('/produit/{clientId}', [ProduitController::class, 'adds']);
+    Route::get('/produit/{clientId}', [ProduitController::class, 'add']);
     Route::get('/contract/{clientId}', [ContractController::class, 'monc']);
     Route::post('/logout', [ClientController::class, 'logout']);
     Route::post('/update_profile/{id}', [ClientController::class, 'update']);

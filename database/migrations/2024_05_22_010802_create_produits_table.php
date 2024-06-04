@@ -24,6 +24,7 @@ class CreateProduitsTable extends Migration
             $table->timestamps();
 
             $table->foreign('reference_contrat')->references('reference_contrat')->on('contract')->onDelete('cascade');
+            
         });
     }
 
