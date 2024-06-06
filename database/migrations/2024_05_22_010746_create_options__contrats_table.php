@@ -15,6 +15,9 @@ class CreateOptionsContratsTable extends Migration
     {
         Schema::create('options__contrats', function (Blueprint $table) {
             $table->id();
+            $table->string('designation');
+            $table->double('prix');
+            $table->unsignedBigInteger('contrat_id');
             $table->timestamps();
         });
     }

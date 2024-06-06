@@ -36,10 +36,7 @@ class FactureController extends Controller
 
 
     public function login(Request $request) {
-        
-    
-        
-    
+
         $fac = Facture::where('code_Client', $request->code_Client)->first();
     
         if(!$client) {
