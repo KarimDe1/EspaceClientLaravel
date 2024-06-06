@@ -51,6 +51,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/update_profile/{id}', [ClientController::class, 'update']);
     Route::get('/currentuser', [ClientController::class, 'getCurrentUser']);
     Route::post('/create-payment-intent', [StripePaymentController::class, 'createPaymentIntent']);
+    Route::post('/checkout', [StripePaymentController::class, 'checkout']);
+    Route::put('/factures/{id}', [FactureController::class, 'updateResteAPayer']);
+
 
 
 });

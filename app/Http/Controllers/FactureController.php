@@ -23,7 +23,28 @@ class FactureController extends Controller
     {
         $factures = Facture::where('client_id', $clientId)->get();
         return response()->json($factures);
+
+
+
     }
+
+
+
+    public function updateResteAPayer(Request $request, $id)
+    {
+        try {
+            $facture = Facture::findOrFail($id);
+            $facture->update(['reste_a_payer' => '0']);
+
+            return response()->json(['message' => 'Reste a payer updated successfully'], 200);
+        } catch (\Exception $e) {
+            Log::error('Error updating reste a payer: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal Server Error'], 500);
+        }
+    }
+
+
+    
 
     public function monf($id)
     {

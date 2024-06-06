@@ -21,10 +21,10 @@ class StripePaymentController extends Controller
                 return response()->json(['error' => 'Invalid amount'], 400);
             }
 
-            $amountInCents = (int) ($amount * 1);
+            
 
             $paymentIntent = PaymentIntent::create([
-                'amount' => $amountInCents,
+                'amount' => $amount,
                 'currency' => 'usd',
             ]);
 
