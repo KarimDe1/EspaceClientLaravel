@@ -5,7 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Validation\Rules\Password as RulesPassword;
+ use Illuminate\Support\Facades\File;
 use App\Models\Client;
 
 class ClientController extends Controller
@@ -91,40 +96,45 @@ class ClientController extends Controller
  
 
 
-    public function login(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'tel' => 'required|string',
-            'code_Client' => 'required|string'
-        ]);
     
+    public function login(Request $request)
+    {
+
+        //validation des requêtes
+        $validator = Validator::make($request->all(), [
+            'code_Client' => 'required',
+            'password' => 'required' 
+
+        ]);
+
+        //Si la validation échoue, une réponse d'erreur sera renvoyée
         if ($validator->fails()) {
+
             return response()->json([
                 'validation_errors' => $validator->messages(),
-            ], 422); // Use appropriate HTTP status code for validation errors
-        }
+            ]);
+        } else {
+            //vérification des données saisies
+            $client = Client::where('code_Client', $request->code_Client)->first();
+            if(!$client || ($request->password !== $client->password)) {
+                return response()->json([
+                    'message' => 'Informations incorrectes'
+                ], 401);
+            }
+            else {
+                $clientinfo = $client;
     
-        // Check client existence
-        $client = Client::where('code_Client', $request->code_Client)->first();
-    
-        if(!$client) {
-            return response()->json([
-                'message' => 'Informations incorrectes'
-            ], 401);
-        }
-    
-        // Assuming $name is a valid field in your Client model
-        $clientinfo = $client;
-    
-        $token = $client->createToken('myapptoken')->plainTextToken;
-    
-        return response()->json([
-            'status' => 200,
-            'client' => $clientinfo, 
-            'token' => $token,
-            'message' => 'Connecté avec succès!',  
-        ]);
+                $token = $client->createToken('myapptoken')->plainTextToken;
+            
+                return response()->json([
+                    'status' => 200,
+                    'client' => $clientinfo->name.' '.$clientinfo->last_name, 
+                    'token' => $token,
+                    'message' => 'Connecté avec succès!',  
+                ]);
+            }
     }
-    
+}   
 
     /**
      * Store a newly created resource in storage.
@@ -221,5 +231,96 @@ class ClientController extends Controller
               ]);
           }
       }
+
+
+      public function forgotpassword(Request $request)
+      {
+          // Validation des requêtes
+          $validator = Validator::make($request->all(), [
+              'login' => 'required|email'
+          ]);
+      
+          // Si la validation échoue, une réponse d'erreur sera renvoyée
+          if ($validator->fails()) {
+              return response()->json([
+                  'validation_errors' => $validator->messages()
+              ]);
+          }
+      
+          // Vérification de l'utilisateur
+          $client = Client::where('login', $request->login)->first();
+          if (!$client) {
+              \Log::error('User not found for login: ' . $request->login);
+              return response()->json([
+                  'status' => 401,
+                  'message' => 'Aucun utilisateur trouvé'
+              ]);
+          }
+      
+          // Envoi d'un lien de vérification par login
+          $status = Password::broker('client')->sendResetLink($request->only('login'));
+      
+          if ($status == Password::RESET_LINK_SENT) {
+              return response()->json([
+                  'status' => 200,
+                  'message' => 'Lien de récupération de mot de passe envoyé avec succès',
+              ]);
+          } else {
+              // Log the status for debugging
+              \Log::error('Password reset email failed to send', ['status' => $status, 'email' => $request->login]);
+      
+              // Si login n'a pas été envoyé, une réponse d'erreur sera renvoyée
+              return response()->json([
+                  'status' => 404,
+                  'message' => "E-mail n'a pas été envoyé"
+                   
+              ]);
+          }
+      }
+      
+      
+      
+ 
+
+    public function resetforgottenpassword(Request $request)
+    {
+        //validation des requêtes
+        $validator = Validator::make($request->all(), [
+            'token' => 'required',
+            'password' => 'required',
+        ]);
+
+        //Si la validation échoue, une réponse d'erreur sera renvoyée
+        if ($validator->fails()) {
+            return response()->json([
+                'validation_errors' => $validator->messages()
+            ]);
+        } else {
+            $status = Password::broker('client')->reset(
+                $request->only('password', 'password_confirmation', 'token'),
+                function ($user) use ($request) {
+                    $user->forceFill([
+                        'password' => Hash::make($request->password),
+                        'remember_token' => Str::random(60),
+                    ])->save();
+
+                    $user->tokens()->delete();
+                    event(new PasswordReset($user));
+                }
+            );
+            if ($status == Password::PASSWORD_RESET) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Votre mot de passe à été réinitialisé avec succès'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => "Mot de passe n'a pas été réinitialisé"
+                ]);
+            }
+        }
+    }
+
   
 }

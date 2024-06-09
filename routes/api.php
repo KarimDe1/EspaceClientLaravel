@@ -40,6 +40,13 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/products/search/{name}', [ProductController::class, 'search']);
 
 
+//Route pour l'envoi d'un lien de vérification par e-mail 
+Route::post('/forgot-password', [ClientController::class, 'forgotpassword']);
+//Route pour réinitialiser le mot de passe oublié 
+Route::post('/reset-forgottenpassword', [ClientController::class, 'resetforgottenpassword']);
+
+
+
 // Protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/factures/{clientId}', [FactureController::class, 'monf']);
