@@ -31,7 +31,7 @@ Route::post('/addc', [ContractController::class, 'add']);
 Route::post('/addp', [ProduitController::class, 'add']);
 Route::post('/addoption', [OptionsContractsController::class, 'addp']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/log', [ClientController::class, 'login']);
+Route::post('/log', [ClientController::class, 'login'])->middleware('throttle:login');
 
 Route::get('/sanctum/csrf-cookie', [ClientController::class, 'getCSRFCookie']);
 
@@ -60,7 +60,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/create-payment-intent', [StripePaymentController::class, 'createPaymentIntent']);
     Route::post('/checkout', [StripePaymentController::class, 'checkout']);
     Route::put('/factures/{id}', [FactureController::class, 'updateResteAPayer']);
-    Route::put('/contrat/{id}', [OptionsContractsController::class, 'buy_option']);
     Route::post('/options', [OptionsContractsController::class, 'add']);
 
 

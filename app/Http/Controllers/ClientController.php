@@ -119,6 +119,7 @@ class ClientController extends Controller
             if(!$client || ($request->password !== $client->password)) {
                 return response()->json([
                     'message' => 'Informations incorrectes'
+
                 ], 401);
             }
             else {
@@ -128,7 +129,7 @@ class ClientController extends Controller
             
                 return response()->json([
                     'status' => 200,
-                    'client' => $clientinfo->name.' '.$clientinfo->last_name, 
+                    'client' => $clientinfo, 
                     'token' => $token,
                     'message' => 'Connecté avec succès!',  
                 ]);
