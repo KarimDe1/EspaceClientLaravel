@@ -53,7 +53,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/create-payment-intent', [StripePaymentController::class, 'createPaymentIntent']);
     Route::post('/checkout', [StripePaymentController::class, 'checkout']);
     Route::put('/factures/{id}', [FactureController::class, 'updateResteAPayer']);
-
+    Route::put('/contrat/{id}', [OptionsContractsController::class, 'buy_option']);
+    Route::post('/optionsContrat/{contratId}', [OptionsContractsController::class, 'updateOption']);
 
 
 });

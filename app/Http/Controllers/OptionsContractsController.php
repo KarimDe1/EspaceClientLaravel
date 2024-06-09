@@ -26,7 +26,18 @@ class OptionsContractsController extends Controller
         ]);
     }
 
+    public function updateResteAPayer(Request $request, $id)
+    {
+        try {
+            $option = Options_Contrat::findOrFail($id);
+            $option->update(['contrat_id' => $id]);
 
+            return response()->json(['message' => 'you now got the option'], 200);
+        } catch (\Exception $e) {
+            Log::error('Error getting the: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal Server Error'], 500);
+        }
+    }
 
 
 
