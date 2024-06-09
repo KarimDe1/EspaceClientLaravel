@@ -82,22 +82,26 @@ class FactureController extends Controller
 public function add(Request $request) {
     $fields = $request->validate([
         'client_id'=> 'required|string',
-        'numero_facture'=> 'required|string',
         'montant_a_payer'=> 'required|string',
         'reste_a_payer'=> 'required|string',
         'prise_en_charge'=> 'required|string',
         'echeance'=> 'required|string',
     ]);
 
+    $echeance = Carbon::now()->addMonth()->format('d-m-Y H:i:s');
+    
+    do {
+        $numero_facture = mt_rand(100000, 999999);
+    } while (Facture::where('numero_facture', $numero_facture)->exists());
+
     $facture = Facture::create([
         'client_id' => $fields['client_id'],
-        'numero_facture' => $fields['numero_facture'],
         'montant_a_payer' => $fields['montant_a_payer'],
+        'numero_facture' => $numero_facture,
         'reste_a_payer' => $fields['reste_a_payer'],
         'prise_en_charge' => $fields['prise_en_charge'],
-        'echeance' => $fields['echeance'],
+        'echeance' => $echeance,
     ]);
-
     try {
         // Generate PDF from the view
         $pdf = Pdf::loadView('facture', compact('facture'));

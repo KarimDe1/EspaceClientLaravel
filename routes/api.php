@@ -29,7 +29,7 @@ Route::post('/add', [ClientController::class, 'add']);
 Route::post('/addf', [FactureController::class, 'add']);
 Route::post('/addc', [ContractController::class, 'add']);
 Route::post('/addp', [ProduitController::class, 'add']);
-Route::post('/addoption', [OptionsContractsController::class, 'add']);
+Route::post('/addoption', [OptionsContractsController::class, 'addp']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/log', [ClientController::class, 'login']);
 
@@ -54,7 +54,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/checkout', [StripePaymentController::class, 'checkout']);
     Route::put('/factures/{id}', [FactureController::class, 'updateResteAPayer']);
     Route::put('/contrat/{id}', [OptionsContractsController::class, 'buy_option']);
-    Route::post('/optionsContrat/{contratId}', [OptionsContractsController::class, 'updateOption']);
+    Route::post('/options', [OptionsContractsController::class, 'add']);
+
 
 
 });

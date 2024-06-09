@@ -17,9 +17,39 @@ class OptionsContractsController extends Controller
     {
         //
     }
+
+
+
+    // OptionsContractsController.php
+    public function add(Request $request) {
+        $fields = $request->validate([
+            'contrat_id'=> 'required|string',
+            'designation'=> 'required|string',
+            'prix'=> 'required|string',
+        ]);
+
+        $option = Options_Contrat::create([
+            'contrat_id' => $fields['contrat_id'],
+            'designation' => $fields['designation'],
+            'prix' => $fields['prix'],
+        ]);
+
+        $response = [
+            'options' => $option,
+        ];
+
+        return response($response, 201);
+    }
+
+
+
+
+
+
+
     public function look()
     {
-        $option = Options_Contrat::all();
+        $option = Options_Contrat::all(); // Fetch all options
         return response()->json([
             'status' => 200,
             'option' => $option
@@ -55,7 +85,7 @@ class OptionsContractsController extends Controller
 
 
 
-    public function add(Request $request) {
+    public function addp(Request $request) {
         $fields = $request->validate([
             'contrat_id'=> 'required|string',
             'designation'=> 'required|string',

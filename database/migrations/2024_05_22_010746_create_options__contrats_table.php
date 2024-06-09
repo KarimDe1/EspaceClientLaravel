@@ -17,7 +17,7 @@ class CreateOptionsContratsTable extends Migration
             $table->id();
             $table->string('designation');
             $table->double('prix');
-            $table->unsignedBigInteger('contrat_id');
+            $table->unsignedBigInteger('contrat_id')->nullable();;
             $table->timestamps();
         });
     }
