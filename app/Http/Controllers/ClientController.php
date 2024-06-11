@@ -116,7 +116,8 @@ class ClientController extends Controller
         } else {
             //vérification des données saisies
             $client = Client::where('code_Client', $request->code_Client)->first();
-            if(!$client || ($request->password !== $client->password)) {
+          //  if(!$client || !Hash::check($request->password, $client->password)) {
+            if (!$client || $request->password !== $client->password) {
                 return response()->json([
                     'message' => 'Informations incorrectes'
 
