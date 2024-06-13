@@ -60,7 +60,7 @@ class FactureController extends Controller
             'montant_a_payer'=> 'required|string',
             'reste_a_payer'=> 'required|string',
             'prise_en_charge'=> 'required|string',
-            
+            'echeance'=> 'required|string',
         ]);
     
         $echeance = Carbon::now()->addMonth()->format('Y-m-d');

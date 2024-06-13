@@ -25,7 +25,7 @@ class EmailController extends Controller
 
         try {
             $mail = Email::create($fields);
-            return response()->json(['mail' => $mail ,'message' => 'Migration déposé avec success'], 201);
+            return response()->json(['mail' => $mail ,'message' => 'Mail a ete cree avec success'], 201);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to create DemandeTransfertLigne', 'error' => $e->getMessage()], 500);
         }

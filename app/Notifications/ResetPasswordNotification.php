@@ -43,7 +43,7 @@ class ResetPasswordNotification extends Notification
     {
         return (new MailMessage)
             ->greeting('Bonjour!')
-            ->line('Reset your password')
+            ->line('réinitialisez votre mot de passe ')
             ->action('Cliquez pour réinitialiser', $this->url)
             ->line("Merci d'utiliser notre application!")
             ->salutation("Cordialement, Espace Client Topnet")
