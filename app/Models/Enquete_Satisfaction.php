@@ -4,7 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Jenssegers\Mongodb\Eloquent\Model;
 
-class EnqueteSatisfaction extends Model
+class Enquete_Satisfaction extends Model
 {
     use HasFactory;
 
@@ -14,5 +14,11 @@ class EnqueteSatisfaction extends Model
         'question3',
         'question4',
         'question5',
+        'client_id'
     ];
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
 }

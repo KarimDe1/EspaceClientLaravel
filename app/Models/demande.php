@@ -16,7 +16,12 @@ class Demande extends Model
         'Ticket',      
         'Service',     
         'Motif',     
-        'State'
+        'State',
+        'client_id',
     ];
 
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
 }

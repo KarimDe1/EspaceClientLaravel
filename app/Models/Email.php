@@ -1,23 +1,22 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Jenssegers\Mongodb\Eloquent\Model;
 
-class Suggestion extends Model
+class Email extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'Sugg_context',
-        'Subject',
-        'Message',
-        'Ticket',
+        'mail',
+        'mail_rec',
         'client_id',
+        'State',
     ];
+
     public function client()
     {
-        return $this->belongsTo(client::class);
+        return $this->belongsTo(Client::class);
     }
 }

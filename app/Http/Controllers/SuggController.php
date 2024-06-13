@@ -15,30 +15,29 @@ class SuggController extends Controller
         ]);
 
         $fields['Ticket'] = uniqid();  
-        $fields['Subject'] = $fields['subject']; 
-        $fields['created_at'] = now();
         $fields['client_id'] = $clientId;
     
         try {
-            // Create a new suggestion with the validated data
-            $sug = Suggestion::create($fields);
-    
-            // Return a success response with the newly created suggestion
-            return response()->json(['suggestion' => $sug], 201);
+            $sug = suggestion::create($fields);
+            return response()->json(['message' => 'Enquête de satisfaction déposé avec success','suggestion' => $sug], 201);
         } catch (\Exception $e) {
-            // Handle any exceptions that occur during creation
             return response()->json(['message' => 'Failed to create suggestion', 'error' => $e->getMessage()], 500);
         }
+
+        
     }
 
-    public function history($clientId) {
-        $suggestions = Suggestion::where('client_id', $clientId)
-            ->select(['Ticket', 'Subject', 'created_at'])
-            ->get();
+    public function history($id)
+    {
+        $suggestion = Suggestion::where('client_id', $id)->get();
         return response()->json([
             'status' => 200,
-            'suggestions' => $suggestions
+            'suggestion' => $suggestion
         ]);
-
     }
+
+   
+        
+    
+
 }

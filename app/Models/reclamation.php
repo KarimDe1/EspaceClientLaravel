@@ -19,7 +19,12 @@ class Reclamation extends Model
         'Ticket',
         'Motif',
         'State',
+        'client_id',
+        'gsm',
     ];
 
-
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'gsm', 'gsm');
+    }
 }

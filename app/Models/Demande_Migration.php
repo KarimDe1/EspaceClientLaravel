@@ -5,18 +5,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Jenssegers\Mongodb\Eloquent\Model;
 
-class DemandeMigration extends Model
+class Demande_Migration extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'contract',
+        'Contract',
         'current_offre',
         'desired_offre',
+        'Ticket',
         'gsm',
-        'state',
-        'message',
+        'State',
+        'remarque',
         'client_id',
     ];
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
+
+    public function produit()
+    {
+        return $this->hasOne(Produit::class, 'contract_prod', 'contract');
+    }
     
 }
